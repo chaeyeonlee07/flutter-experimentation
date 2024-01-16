@@ -40,11 +40,41 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  void onPausePressed() {
+  void onPausePressed() async {
     timer.cancel();
-    setState(() {
-      isRunning = false;
-    });
+    bool? stopTimer = await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Asking You Once Again"),
+          content: const Text("Do you really want to pause the timer?"),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context)
+                    .pop(true);  
+              },
+              child: const Text("Yes"),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context)
+                    .pop(false);  
+              },
+              child: const Text("No"),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (stopTimer != null && stopTimer) {
+      setState(() {
+        isRunning = false;
+      });
+    } else if (stopTimer != null && !stopTimer) {
+      onStartPressed();
+    }
   }
 
   String format(int seconds) {
