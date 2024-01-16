@@ -15,6 +15,7 @@ class _HomeScreenState extends State<HomeScreen> {
   int totalSeconds = twentyFiveMinutes;
   late Timer timer;
   bool isRunning = false;
+  bool isAlive = true;
   int totalPomodoros = 0;
   int totalLivesofDay = totalLives;
   String today = "";
@@ -76,6 +77,9 @@ class _HomeScreenState extends State<HomeScreen> {
               onPressed: () {
                 Navigator.of(context).pop(true);
                 totalLivesofDay = totalLivesofDay - 1;
+                if (totalLivesofDay == 0) {
+                  isAlive = false;
+                }
               },
               child: const Text("Yes"),
             ),
@@ -107,7 +111,9 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
+      backgroundColor: isAlive
+          ? const Color.fromARGB(255, 162, 230, 164)
+          : Theme.of(context).colorScheme.background,
       body: Column(
         children: [
           Flexible(
@@ -197,28 +203,58 @@ class _HomeScreenState extends State<HomeScreen> {
                     decoration: BoxDecoration(
                       color: Theme.of(context).cardColor,
                     ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        Text(
-                          'Lives Left',
-                          style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w600,
-                              color: Theme.of(context)
-                                  .textTheme
-                                  .displayLarge!
-                                  .color),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Lives Left',
+                              style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w600,
+                                  color: Theme.of(context)
+                                      .textTheme
+                                      .displayLarge!
+                                      .color),
+                            ),
+                            Text(
+                              '$totalLivesofDay',
+                              style: TextStyle(
+                                  fontSize: 58,
+                                  fontWeight: FontWeight.w600,
+                                  color: Theme.of(context)
+                                      .textTheme
+                                      .displayLarge!
+                                      .color),
+                            ),
+                          ],
                         ),
-                        Text(
-                          '$totalLivesofDay',
-                          style: TextStyle(
-                              fontSize: 58,
-                              fontWeight: FontWeight.w600,
-                              color: Theme.of(context)
-                                  .textTheme
-                                  .displayLarge!
-                                  .color),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Lives Left',
+                              style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w600,
+                                  color: Theme.of(context)
+                                      .textTheme
+                                      .displayLarge!
+                                      .color),
+                            ),
+                            Text(
+                              '$totalLivesofDay',
+                              style: TextStyle(
+                                  fontSize: 58,
+                                  fontWeight: FontWeight.w600,
+                                  color: Theme.of(context)
+                                      .textTheme
+                                      .displayLarge!
+                                      .color),
+                            ),
+                          ],
                         ),
                       ],
                     ),
