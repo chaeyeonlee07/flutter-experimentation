@@ -10,10 +10,12 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   static const twentyFiveMinutes = 1500;
+  static const totalLives = 3;
   int totalSeconds = twentyFiveMinutes;
   late Timer timer;
   bool isRunning = false;
   int totalPomodoros = 0;
+  int totalLivesofDay = totalLives;
 
   void onTick(Timer timer) {
     if (totalSeconds == 0) {
@@ -51,15 +53,14 @@ class _HomeScreenState extends State<HomeScreen> {
           actions: <Widget>[
             TextButton(
               onPressed: () {
-                Navigator.of(context)
-                    .pop(true);  
+                Navigator.of(context).pop(true);
+                totalLivesofDay = totalLivesofDay - 1;
               },
               child: const Text("Yes"),
             ),
             TextButton(
               onPressed: () {
-                Navigator.of(context)
-                    .pop(false);  
+                Navigator.of(context).pop(false);
               },
               child: const Text("No"),
             ),
@@ -85,10 +86,11 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Theme.of(context).colorScheme.background,
-        body: Column(children: [
+      backgroundColor: Theme.of(context).colorScheme.background,
+      body: Column(
+        children: [
           Flexible(
-            flex: 1,
+            flex: 2,
             child: Container(
               alignment: Alignment.bottomCenter,
               child: Text(
@@ -121,7 +123,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Container(
                     decoration: BoxDecoration(
                       color: Theme.of(context).cardColor,
-                      borderRadius: BorderRadius.circular(50),
                     ),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -153,6 +154,47 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
           ),
-        ]));
+          Flexible(
+            flex: 1,
+            child: Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).cardColor,
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Lives Left',
+                          style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w600,
+                              color: Theme.of(context)
+                                  .textTheme
+                                  .displayLarge!
+                                  .color),
+                        ),
+                        Text(
+                          '$totalLivesofDay',
+                          style: TextStyle(
+                              fontSize: 58,
+                              fontWeight: FontWeight.w600,
+                              color: Theme.of(context)
+                                  .textTheme
+                                  .displayLarge!
+                                  .color),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          )
+        ],
+      ),
+    );
   }
 }
