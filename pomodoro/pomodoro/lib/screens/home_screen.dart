@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
+import 'package:intl/intl.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -16,6 +17,13 @@ class _HomeScreenState extends State<HomeScreen> {
   bool isRunning = false;
   int totalPomodoros = 0;
   int totalLivesofDay = totalLives;
+  String today = "";
+
+  @override
+  void initState() {
+    super.initState();
+    today = getCurrentDate();
+  }
 
   void onTick(Timer timer) {
     if (totalSeconds == 0) {
@@ -32,7 +40,20 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  String getCurrentDate() {
+    return DateFormat('yyyy-MM-dd').format(DateTime.now());
+  }
+
   void onStartPressed() {
+    //checking if it a new day
+    String currentDate = getCurrentDate();
+    if (today != currentDate) {
+      setState(() {
+        totalLivesofDay = totalLives;
+        today = currentDate;
+      });
+    }
+    // running the timer again
     timer = Timer.periodic(
       const Duration(seconds: 1),
       onTick,
@@ -90,7 +111,20 @@ class _HomeScreenState extends State<HomeScreen> {
       body: Column(
         children: [
           Flexible(
-            flex: 2,
+            flex: 1,
+            child: Container(
+              alignment: Alignment.bottomCenter,
+              child: Text(
+                today,
+                style: TextStyle(
+                    color: Theme.of(context).cardColor,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w600),
+              ),
+            ),
+          ),
+          Flexible(
+            flex: 1,
             child: Container(
               alignment: Alignment.bottomCenter,
               child: Text(
@@ -103,7 +137,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           Flexible(
-            flex: 3,
+            flex: 2,
             child: Center(
               child: IconButton(
                 iconSize: 120,
