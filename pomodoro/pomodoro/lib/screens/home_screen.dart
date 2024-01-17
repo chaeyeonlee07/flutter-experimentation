@@ -10,7 +10,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  static const twentyFiveMinutes = 1500;
+  static const twentyFiveMinutes = 10;
   static const totalLives = 3;
   int totalSeconds = twentyFiveMinutes;
   late Timer timer;
@@ -18,6 +18,8 @@ class _HomeScreenState extends State<HomeScreen> {
   bool isAlive = true;
   int totalPomodoros = 0;
   int totalLivesofDay = totalLives;
+  int streaks = 1;
+  bool isSuccess = false;
   String today = "";
 
   @override
@@ -32,6 +34,7 @@ class _HomeScreenState extends State<HomeScreen> {
         totalPomodoros = totalPomodoros + 1;
         totalSeconds = twentyFiveMinutes;
         isRunning = false;
+        isSuccess = true;
       });
       timer.cancel();
     } else {
@@ -61,6 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
     setState(() {
       isRunning = true;
+      isSuccess = false;
     });
   }
 
@@ -71,6 +75,7 @@ class _HomeScreenState extends State<HomeScreen> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text("Asking You Once Again"),
+          backgroundColor: const Color.fromARGB(255, 239, 225, 153),
           content: const Text("Do you really want to pause the timer?"),
           actions: <Widget>[
             TextButton(
@@ -110,10 +115,12 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    double progress = (twentyFiveMinutes - totalSeconds) / twentyFiveMinutes;
+    Color startColor = const Color(0xFFF8C4C4);
+    Color endColor = const Color(0xFFF08080);
+    Color currentColor = Color.lerp(startColor, endColor, progress)!;
     return Scaffold(
-      backgroundColor: isAlive
-          ? const Color.fromARGB(255, 162, 230, 164)
-          : Theme.of(context).colorScheme.background,
+      backgroundColor: currentColor,
       body: Column(
         children: [
           Flexible(
@@ -124,8 +131,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 today,
                 style: TextStyle(
                     color: Theme.of(context).cardColor,
-                    fontSize: 20,
-                    fontWeight: FontWeight.w600),
+                    fontSize: 28,
+                    fontWeight: FontWeight.w800),
               ),
             ),
           ),
@@ -133,13 +140,22 @@ class _HomeScreenState extends State<HomeScreen> {
             flex: 1,
             child: Container(
               alignment: Alignment.bottomCenter,
-              child: Text(
-                format(totalSeconds),
-                style: TextStyle(
-                    color: Theme.of(context).cardColor,
-                    fontSize: 89,
-                    fontWeight: FontWeight.w600),
-              ),
+              child: isSuccess
+                  ? const Text(
+                      'Success!',
+                      style: TextStyle(
+                        fontSize: 70,
+                        fontWeight: FontWeight.bold,
+                        color: Color.fromARGB(255, 238, 119, 119),
+                      ),
+                    )
+                  : Text(
+                      format(totalSeconds),
+                      style: TextStyle(
+                          color: Theme.of(context).cardColor,
+                          fontSize: 89,
+                          fontWeight: FontWeight.w600),
+                    ),
             ),
           ),
           Flexible(
@@ -235,7 +251,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              'Lives Left',
+                              'Streaks',
                               style: TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.w600,
@@ -245,7 +261,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       .color),
                             ),
                             Text(
-                              '$totalLivesofDay',
+                              '$streaks',
                               style: TextStyle(
                                   fontSize: 58,
                                   fontWeight: FontWeight.w600,
